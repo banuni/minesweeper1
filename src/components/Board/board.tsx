@@ -1,53 +1,14 @@
 import * as React from 'react';
-import {createBoard, revealPoint} from './BoardUtils'
-import {Point, Cell} from "./types";
-import ClickNHold from 'react-click-n-hold'
 import classnames from 'classnames'
+
+import CellView from './cell'
+import Panel from "../Panel/panel";
+import {createBoard, revealPoint} from './BoardUtils'
+import {Cell, Point} from "./types";
 
 import * as s from './board.scss';
 
-import './board.scss';
-import Panel from "../Panel/panel";
-
 const DEFAULTS = {rows: 7, cols: 7, mines: 7};
-
-class CellView extends React.PureComponent<{isRevealed: boolean, isMine: boolean, isFlagged: boolean, value: string, x: number, y: number, onClickCheckLong: Function}, any> {
-    shouldComponentUpdate(newProps){
-        return (this.props.isRevealed !== newProps.isRevealed) || (this.props.isFlagged !== newProps.isFlagged);
-    }
-
-    render() {
-        const {value, isRevealed, isMine, isFlagged} = this.props;
-        let displayValue = '';
-        if (isFlagged) {
-            displayValue = '$';
-        }
-        else if (isMine) {
-            displayValue = isRevealed ? 'X' : '*';
-        } else if (isRevealed) {
-            displayValue = value;
-        }
-        const classes = classnames(s.cell, {[s.revealed]: isRevealed});
-
-        const onClickCheckLong = (e, enough) => {
-            const {x, y} = this.props;
-            this.props.onClickCheckLong({x, y}, enough)
-        };
-
-        return (
-            <ClickNHold className={classes}
-                        time={0.2}
-                        onEnd={onClickCheckLong}
-            >
-                    <span>
-                        {displayValue}
-                    </span>
-            </ClickNHold>
-        );
-    }
-};
-
-
 
 export default class Board extends React.PureComponent<null, {board: Cell[][], gameFinished: boolean, gameWon: boolean, totalCells: number, revealedCells: number}> {
     constructor() {
@@ -122,7 +83,7 @@ export default class Board extends React.PureComponent<null, {board: Cell[][], g
                 {gameState}
                 {this.state.board.map((row, x) => (
                     <div className={s.row} key={x}>
-                        {row.map((cell, y) => (
+                        {row.map((cell: Cell, y: number) => (
                             <CellView key={y}
                                       onClickCheckLong={this.onCellClick}
                                       x={x}
