@@ -1,0 +1,27 @@
+.board {
+    .row {
+        white-space: nowrap;
+        .cell {
+            display: inline-block;
+            border: dodgerblue 1px solid;
+            width: 40px;
+            height: 40px;
+            font-size: 30px;
+            text-align: center;
+            vertical-align: middle;
+        }
+    }
+}
+
+
+@keyframes fill {
+    to {
+        background-size: 100% 0;
+    }
+}
+.board:not(.gameOver) :global(.cnh_holding):not(.revealed).cell {
+    background: linear-gradient(white, white) rgb(255, 215, 235) no-repeat 0 0;
+    mix-blend-mode: multiply;
+    background-size: 100% 100%;
+    animation: fill 0.3s forwards;
+}
