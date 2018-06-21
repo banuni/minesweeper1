@@ -15,7 +15,13 @@ type cellProps = {
 
 export default class CellView extends React.PureComponent<cellProps, any> {
     shouldComponentUpdate(newProps) {
-        return (this.props.isRevealed !== newProps.isRevealed) || (this.props.isFlagged !== newProps.isFlagged);
+
+        const cond = (this.props.isRevealed !== newProps.isRevealed)
+            || (this.props.isFlagged !== newProps.isFlagged)
+            || (this.props.isMine !== newProps.isMine);
+        if (cond){
+        }
+        return cond
     }
 
     render() {

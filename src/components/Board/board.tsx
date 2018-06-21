@@ -1,16 +1,17 @@
 import * as React from 'react';
-import classnames from 'classnames'
+import * as axios from 'axios';
+import classnames from 'classnames';
 
 import CellView from './cell'
 import Panel from "../Panel/panel";
 import {createBoard, revealPoint} from './BoardUtils'
-import {Cell, Point} from "./types";
+import {Cell, Point, State} from "./types";
 
 import * as s from './board.scss';
 
 const DEFAULTS = {rows: 7, cols: 7, mines: 7};
 
-export default class Board extends React.PureComponent<null, {board: Cell[][], gameFinished: boolean, gameWon: boolean, totalCells: number, revealedCells: number}> {
+export default class Board extends React.Component<null, State> {
     constructor() {
         super();
         this.state = {
@@ -22,7 +23,19 @@ export default class Board extends React.PureComponent<null, {board: Cell[][], g
         };
         this.startNewGame = this.startNewGame.bind(this);
         this.onCellClick = this.onCellClick.bind(this);
+        this.saveGame = this.saveGame.bind(this);
+        this.loadGame = this.loadGame.bind(this);
     }
+    loadGame() {
+        axios.get("http://localhost:3001/load")
+            .then((response) => {
+                this.setState(response.data)
+            })
+    }
+    saveGame() {
+        axios.post("http://localhost:3001/save", {state:JSON.stringify(this.state)})
+    }
+
     startNewGame(rows: number, columns: number, mines: number){
         const newBoard = createBoard(rows, columns, mines);
         this.setState({
@@ -95,6 +108,8 @@ export default class Board extends React.PureComponent<null, {board: Cell[][], g
                 ))}
                 <Panel
                     startNewGame={this.startNewGame}
+                    saveGame={this.saveGame}
+                    loadGame={this.loadGame}
                 />
             </div>
         )

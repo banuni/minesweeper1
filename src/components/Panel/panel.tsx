@@ -1,6 +1,13 @@
 import * as React from "react";
 
-export default class Panel extends React.Component<{startNewGame: (x:number, y:number, z:number)=>any}, {rows: number, columns: number, mines: number}> {
+type PanelProps = {
+    startNewGame: (x:number, y:number, z:number)=>void,
+    saveGame: Function,
+    loadGame: Function
+}
+
+
+export default class Panel extends React.Component<PanelProps, {rows: number, columns: number, mines: number}> {
     constructor(props) {
         super(props);
         this.state = {rows: 7, columns: 7, mines: 7};
@@ -14,20 +21,26 @@ export default class Panel extends React.Component<{startNewGame: (x:number, y:n
     }
 
     render() {
+        const {saveGame, loadGame} = this.props;
         return (
-            <form onSubmit={this.handleSubmit}>
-                <label>
-                    rows:
-                    <input type="integer" value={this.state.rows} onChange={(e) =>{this.setState({rows: parseInt(e.target.value) || 0})}} />
-                </label>
-                <label>
-                    <input type="integer" value={this.state.columns} onChange={(e) =>{this.setState({columns: parseInt(e.target.value) || 0})}} />
-                </label>
-                <label>
-                    <input type="integer" value={this.state.mines} onChange={(e) =>{this.setState({mines: parseInt(e.target.value) || 0})}} />
-                </label>
-                <input type="submit" value="Submit" />
-            </form>
+            <div>
+                <form onSubmit={this.handleSubmit}>
+                    <label>
+                        rows:
+                        <input type="integer" value={this.state.rows} onChange={(e) =>{this.setState({rows: parseInt(e.target.value) || 0})}} />
+                    </label>
+                    <label>
+                        <input type="integer" value={this.state.columns} onChange={(e) =>{this.setState({columns: parseInt(e.target.value) || 0})}} />
+                    </label>
+                    <label>
+                        <input type="integer" value={this.state.mines} onChange={(e) =>{this.setState({mines: parseInt(e.target.value) || 0})}} />
+                    </label>
+                    <input type="submit" value="Submit" />
+                </form>
+                <button onClick={()=>saveGame()}> save game</button>
+                <button onClick={()=>loadGame()}> load game</button>
+            </div>
+
         );
     }
 }
